@@ -23,7 +23,41 @@ public class Move : MonoBehaviour
         //this.transform.Translate(direction);
     }
 
+    private void LateUpdate()
+    {
+        direction = goal.transform.position - this.transform.position;
 
+        //Dot product calculate (a.x * b.x ,a.y * b.y,. a.z * b.z) To get the angle between vectors
+        //The two vectors are the direction of target, and the forward vector of the character
+        //Assuming that this character can see if the dot product is higher than 0 (Less than 90 degrees)
+        //This means that the vision can be adjusted by changing the magic number on the if statement
+        /*if (Vector3.Dot(direction, this.transform.forward) > 0)
+        {
+            this.transform.LookAt(goal.transform.position);
+            if (direction.sqrMagnitude > 4)
+            {
+                Vector3 velocity = direction.normalized * speed * Time.deltaTime;
+                this.transform.position = this.transform.position + velocity;
+            }
+        }*/
+
+
+        //Compared on calculating Dot Product, we can use Vector.Angle (return 0 to 180 degrees)
+        //It calculate the degrees of the target and the forward vector of the character
+        //In here if the target is moving closer to the forward vector, the angle is getting lower
+        //Lower than 20 degrees and the character can detect it
+        if (Vector3.Angle(direction, this.transform.forward) < 20)
+        {
+            this.transform.LookAt(goal.transform.position);
+            if (direction.sqrMagnitude > 4)
+            {
+                Vector3 velocity = direction.normalized * speed * Time.deltaTime;
+                this.transform.position = this.transform.position + velocity;
+            }
+        }
+    }
+
+    /* Vector
     void LateUpdate()
     {
         //Both pigs will reach the same location at the same time
@@ -52,5 +86,5 @@ public class Move : MonoBehaviour
             Vector3 velocity = direction.normalized * speed * Time.deltaTime;
             this.transform.position = this.transform.position + velocity;
         }
-    }
+    }*/
 }
